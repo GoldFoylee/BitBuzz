@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  buzzCredits  Decimal  @default(1000)
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+  positions    Position[]
+  transactions Transaction[]
+}
+
+model Market {
+  id          String       @id @default(uuid())
+  title       String
+  category    String
+  status      MarketStatus @default(OPEN)
+  closeTime   DateTime
+  outcome     String?
+  createdById String
+  createdAt   DateTime     @default(now())
+  pool        MarketPool?
+  positions   Position[]
+  transactions Transaction[]
+}
+
+model MarketPool {
+  id                String  @id @default(uuid())
+  marketId          String  @unique
+  yesShares         Decimal @default(50)
+  noShares          Decimal @default(50)
+  liquidityConstant Decimal @default(100)
+  market            Market  @relation(fields: [marketId], references: [id])
+}
+
+model Position {
+  id            String  @id @default(uuid())
+  userId        String
+  marketId      String
+  outcome       String
+  sharesOwned   Decimal
+  avgEntryPrice Decimal
+  user          User    @relation(fields: [userId], references: [id])
+  market        Market  @relation(fields: [marketId], references: [id])
+  @@unique([userId, marketId, outcome])
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  userId      String
+  marketId    String
+  type        TransactionType
+  creditDelta Decimal
+  sharesDelta Decimal
+  timestamp   DateTime        @default(now())
+  user        User            @relation(fields: [userId], references: [id])
+  market      Market          @relation(fields: [marketId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum MarketStatus {
+  OPEN
+  LOCKED
+  RESOLVED
+}
+
+enum TransactionType {
+  BUY
+  SELL
+  PAYOUT
+}
