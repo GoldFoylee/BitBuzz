@@ -2,8 +2,7 @@
 
 BitBuzz is a full-stack Pop Culture Prediction Market constructed with a rigorous Object-Oriented backend and a sleek Vite + React frontend.
 
-Hosted Frontend Link: [HOSTED LINK]  
-API Base: [API LINK]
+Hosted Frontend Link: [https://bit-buzz.vercel.app/](https://bit-buzz.vercel.app/)
 
 ## Architecture & Tech Stack
 
