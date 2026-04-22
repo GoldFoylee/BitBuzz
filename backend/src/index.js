@@ -17,7 +17,7 @@ const server = http.createServer(app);
 // Init Socket.io
 initSocket(server);
 
-const allowedOrigins = ['http://localhost:5173', 'https://[HOSTED LINK]', process.env.FRONTEND_URL];
+const allowedOrigins = ['http://localhost:5173', 'https://bit-buzz.vercel.app', process.env.FRONTEND_URL].filter(Boolean);
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
